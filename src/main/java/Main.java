@@ -72,7 +72,7 @@ public class Main {
                         String option;
                         if (in.ready()) {
                             option = in.readLine();
-                            System.out.println(option);
+                            System.out.println("option " + option);
                             if (option.equals("px")) {
                                 String expTime = in.readLine();
                                 System.out.println("exp time" + expTime);
