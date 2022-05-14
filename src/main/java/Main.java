@@ -46,15 +46,12 @@ public class Main {
             try {
                 out = new PrintWriter(new ObjectOutputStream(clientSocket.getOutputStream()));
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                String s;
-                while (Objects.nonNull(s = in.readLine())) {
-
+//                while (Objects.nonNull(s = in.readLine())) {
+                    while (clientSocket.isConnected()) {
+                        String s = in.readLine();
                         System.out.println(s);
                         if (s.contains("ping")) {
-                            System.out.println("p");
-//                            out.print("+PONG\r\n");
                             out.write("+PONG\r\n");
-                            System.out.println("p");
                         }
 
                 }
