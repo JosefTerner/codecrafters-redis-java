@@ -52,9 +52,9 @@ public class Main {
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-                String s = in.readLine();
-                System.out.println(s);
-                while (Objects.nonNull(s)) {
+                String s;
+                while (Objects.nonNull(s = in.readLine())) {
+                    System.out.println(s);
                     if (s.equals("ping")) {
 //                    System.out.println("+PONG/r/n");
                         out.println("+PONG\r\n");
