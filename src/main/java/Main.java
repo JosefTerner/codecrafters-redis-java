@@ -59,7 +59,7 @@ public class Main {
                         System.out.println(s1);
                         String s2 = in.readLine();
                         System.out.println(s2);
-                        out.write("$" + s1 + "\r" + s2 + "\r\n");
+                        out.write("$" + s1 + "\r\n" + s2 + "\r\n");
                         out.flush();
                     }
                 }
