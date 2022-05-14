@@ -58,7 +58,7 @@ public class Main {
                         System.out.println(in.readLine());
                         String s2 = in.readLine();
                         System.out.println(s2);
-                        out.write(s2 + "\r\n");
+                        out.write(":" + s2 + "\r\n");
                         out.flush();
                     }
                 }
