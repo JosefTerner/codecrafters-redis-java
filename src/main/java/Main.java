@@ -1,6 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -14,9 +12,13 @@ public class Main {
             serverSocket = new ServerSocket(port);
             serverSocket.setReuseAddress(true);
             clientSocket = serverSocket.accept();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             while (clientSocket.isConnected()) {
-                writer.write("+PONG\r\n");
+                String line = reader.readLine();
+                if (line.contains("PING")) {
+                    writer.write("+PONG\r\n");
+                }
             }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
