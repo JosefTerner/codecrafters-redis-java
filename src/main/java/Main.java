@@ -16,6 +16,7 @@ public class Main {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             while (clientSocket.isConnected()) {
                 String line = reader.readLine();
+                System.out.println(line);
                 if (line.contains("PING")) {
                     writer.write("+PONG\r\n");
                 }
