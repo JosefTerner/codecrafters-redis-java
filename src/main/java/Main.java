@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 
 public class Main {
 
@@ -53,9 +54,11 @@ public class Main {
 
                 String s = in.readLine();
                 System.out.println(s);
-                if (s.equals("ping")) {
+                while (Objects.nonNull(s)) {
+                    if (s.equals("ping")) {
 //                    System.out.println("+PONG/r/n");
-                    out.println("+PONG\r\n");
+                        out.println("+PONG\r\n");
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
