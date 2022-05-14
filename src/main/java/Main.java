@@ -70,13 +70,14 @@ public class Main {
                         String value = in.readLine();
                         System.out.println("val" + value);
                         String option;
-                        option = in.readLine();
+                        if (in.ready()) {
+                            option = in.readLine();
                             System.out.println(option);
                             if (option.equals("px")) {
                                 String expTime = in.readLine();
                                 System.out.println("exp time" + expTime);
                             }
-
+                        }
                             keyValue.put(key, value);
                         out.write("+OK" + "\r\n");
                         out.flush();
