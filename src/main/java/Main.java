@@ -54,7 +54,7 @@ public class Main {
                 String line;
                 while ((line = in.readLine()) != null) {
                     System.out.println("+PONG/r/n");
-                    out.println(line);
+//                    out.println(line);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
