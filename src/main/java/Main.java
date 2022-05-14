@@ -78,19 +78,16 @@ public class Main {
                                 in.readLine();
                                 String expTime = in.readLine();
                                 System.out.println("exp time" + expTime);
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            System.out.println("1" + System.currentTimeMillis());
-                                            Thread.sleep(Long.parseLong(expTime));
-                                            keyValue.remove(key);
-                                            System.out.println("2" + System.currentTimeMillis());
-                                        } catch (InterruptedException e) {
-                                            throw new RuntimeException(e);
-                                        }
+                                new Thread(() -> {
+                                    try {
+                                        System.out.println("1" + System.currentTimeMillis());
+                                        Thread.sleep(Long.parseLong(expTime));
+                                        keyValue.remove(key);
+                                        System.out.println("2" + System.currentTimeMillis());
+                                    } catch (InterruptedException e) {
+                                        throw new RuntimeException(e);
                                     }
-                                };
+                                }).start();
                             }
                         }
                         System.out.println("3" + System.currentTimeMillis());
