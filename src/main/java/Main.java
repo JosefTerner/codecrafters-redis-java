@@ -12,7 +12,7 @@ public class Main {
             serverSocket = new ServerSocket(port);
             serverSocket.setReuseAddress(true);
             clientSocket = serverSocket.accept();
-            System.out.println("PING");
+            System.out.println("+PONG\r\n");
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         } finally {
