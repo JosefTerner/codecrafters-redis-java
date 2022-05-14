@@ -46,8 +46,8 @@ public class Main {
         public void run() {
             PrintWriter out = null;
             BufferedReader in = null;
-            try {
-                while (clientSocket.isConnected()) {
+            while (clientSocket.isConnected()) {
+                try {
 
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -58,7 +58,6 @@ public class Main {
                             out.print("+PONG\r\n");
                         }
                     }
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -73,7 +72,8 @@ public class Main {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+            }                }
+
         }
     }
 }
