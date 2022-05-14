@@ -61,6 +61,9 @@ public class Main {
                         out.write(":" + s2 + "\r\n");
                         out.flush();
                     }
+                    if (s.contains("SET")) {
+                        System.out.println("SET HERE: " + s);
+                    }
                 }
                 out.close();
                 in.close();
