@@ -54,6 +54,7 @@ public class Main {
                             out.write("+PONG\r\n");
                         }
                     }
+                    out.flush();
                     out.close();
                     in.close();
             } catch (IOException e) {
