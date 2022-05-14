@@ -71,6 +71,7 @@ public class Main {
                         System.out.println("val" + value);
                         String option;
                         if (in.ready()) {
+                            in.readLine();
                             option = in.readLine();
                             System.out.println("option " + option);
                             if (option.equals("px")) {
