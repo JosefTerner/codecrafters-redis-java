@@ -54,7 +54,7 @@ public class Main {
                     String s;
                     while (Objects.nonNull(s = in.readLine())) {
                         System.out.println(s);
-                        if (s.equals("ping")) {
+                        if (s.contains("ping")) {
                             out.print("+PONG\r\n");
                         }
                     }
