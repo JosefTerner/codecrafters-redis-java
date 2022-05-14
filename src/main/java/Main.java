@@ -63,12 +63,15 @@ public class Main {
                         out.flush();
                     }
                     if (s.contains("set")) {
-                        in.readLine();
+                        System.out.println(in.readLine());
                         String key = in.readLine();
-                        in.readLine();
+                        System.out.println(key);
+                        System.out.println(in.readLine());
                         String value = in.readLine();
+                        System.out.println(value);
                         String option;
                         if (Objects.nonNull(option = in.readLine())) {
+                            System.out.println(option);
                             if (option.equals("px")) {
                                 String expTime = in.readLine();
                                 System.out.println("exp time" + expTime);
