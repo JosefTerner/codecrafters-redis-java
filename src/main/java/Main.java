@@ -50,7 +50,7 @@ public class Main {
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 String s;
-                while (clientSocket.isConnected() && Objects.nonNull(s = in.readLine())) {
+                while (Objects.nonNull(s = in.readLine())) {
 
                         System.out.println(s);
                         if (s.contains("ping")) {
