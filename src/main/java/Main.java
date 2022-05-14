@@ -21,6 +21,8 @@ public class Main {
                     writer.write("+PONG\r\n");
                 }
             }
+            reader.close();
+            writer.close();
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         } finally {
