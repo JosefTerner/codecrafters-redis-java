@@ -42,12 +42,11 @@ public class Main {
         }
 
         public void run() {
-            BufferedWriter out = null;
-            BufferedReader in = null;
+            BufferedWriter out;
+            BufferedReader in;
             try {
                 out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//                while ()) {
                 String s;
                 while (clientSocket.isConnected() && Objects.nonNull(s = in.readLine())) {
                     System.out.println(s);
