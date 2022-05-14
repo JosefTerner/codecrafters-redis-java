@@ -14,10 +14,10 @@ public class Main {
             serverSocket.setReuseAddress(true);
 //            while (true) {
                 clientSocket = serverSocket.accept();
-            PrintWriter out = null;
+            BufferedWriter out = null;
             BufferedReader in = null;
             try {
-                out = new PrintWriter(new ObjectOutputStream(clientSocket.getOutputStream()));
+                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 //                while (Objects.nonNull(s = in.readLine())) {
                 while (clientSocket.isConnected()) {
