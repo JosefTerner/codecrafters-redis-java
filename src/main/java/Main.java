@@ -15,42 +15,12 @@ public class Main {
         try {
             serverSocket = new ServerSocket(port);
             serverSocket.setReuseAddress(true);
+            clientSocket = serverSocket.accept();
             while (true) {
-                clientSocket = serverSocket.accept();
-//                ClientHandler clientSock
-//                        = new ClientHandler(clientSocket);
-//
-//                // This thread will handle the client
-//                // separately
-//                new Thread(clientSock).start();
-                PrintWriter out = null;
-                BufferedReader in = null;
-                try {
-                    out = new PrintWriter(clientSocket.getOutputStream(), true);
-                    in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                ClientHandler clientSock
+                        = new ClientHandler(clientSocket);
 
-                    String s;
-                    while (Objects.nonNull(s = in.readLine())) {
-                        System.out.println(s);
-                        if (s.equals("ping")) {
-                            out.println("+PONG\r\n");
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (out != null) {
-                            out.close();
-                        }
-                        if (in != null) {
-                            in.close();
-                            clientSocket.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                new Thread(clientSock).start();
             }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
@@ -64,7 +34,7 @@ public class Main {
             }
         }
     }
-/*
+
     private static class ClientHandler implements Runnable {
         private final Socket clientSocket;
 
@@ -103,5 +73,5 @@ public class Main {
                 }
             }
         }
-    }*/
+    }
 }
