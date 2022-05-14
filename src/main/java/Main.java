@@ -16,20 +16,22 @@ public class Main {
                 clientSocket = serverSocket.accept();
             BufferedWriter out = null;
             BufferedReader in = null;
-            try {
+            try {                while (clientSocket.isConnected()) {
+
                 out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 //                while (Objects.nonNull(s = in.readLine())) {
-                while (clientSocket.isConnected()) {
-                    String s = in.readLine();
-                    System.out.println(s);
-                    if (s.contains("ping")) {
-                        out.write("+PONG" + "\r\n");
-                    }
+//                while (clientSocket.isConnected()) {
+                String s = in.readLine();
+                System.out.println(s);
+                if (s.contains("ping")) {
+                    out.write("+PONG" + "\r\n");
                 }
+//                }
                 out.flush();
                 out.close();
                 in.close();
+            }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
