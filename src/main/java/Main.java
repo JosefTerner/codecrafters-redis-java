@@ -15,7 +15,9 @@ public class Main {
             serverSocket.setReuseAddress(true);
             clientSocket = serverSocket.accept();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-            writer.write("+PONG\r\n");
+            while (clientSocket.isConnected()) {
+                writer.write("+PONG\r\n");
+            }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         } finally {
