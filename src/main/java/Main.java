@@ -7,7 +7,6 @@ import java.net.Socket;
 
 public class Main {
 
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
   public static void main(String[] args){
         ServerSocket serverSocket;
         Socket clientSocket = null;
@@ -17,14 +16,14 @@ public class Main {
           serverSocket.setReuseAddress(true);
           clientSocket = serverSocket.accept();
         } catch (IOException e) {
-          log.error("IOException: {}", e.getMessage());
+            System.out.println("IOException: " + e.getMessage());
         } finally {
           try {
             if (clientSocket != null) {
               clientSocket.close();
             }
           } catch (IOException e) {
-              log.error("IOException: {}", e.getMessage());
+              System.out.println("IOException: " + e.getMessage());
           }
         }
   }
