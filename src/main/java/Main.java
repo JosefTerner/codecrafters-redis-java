@@ -55,10 +55,12 @@ public class Main {
                         out.flush();
                     }
                     if (s.contains("echo")) {
-                        in.readLine();
-                        out.write(in.readLine() + "\r\n");
+                        String s1 = in.readLine();
+                        System.out.println(s1);
+                        String s2 = in.readLine();
+                        System.out.println(s2);
+                        out.write(s2 + "\r\n");
                         out.flush();
-
                     }
                 }
                 out.close();
