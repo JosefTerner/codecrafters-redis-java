@@ -68,7 +68,7 @@ public class Main {
                         System.out.println(key);
                         System.out.println(in.readLine());
                         String value = in.readLine();
-                        System.out.println(value);
+                        System.out.println("val" + value);
                         String option;
                         if (Objects.nonNull(option = in.readLine())) {
                             System.out.println(option);
