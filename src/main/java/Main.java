@@ -56,6 +56,7 @@ public class Main {
                         if (s.contains("ping")) {
                             System.out.println("p");
                             out.print("+PONG\r\n");
+                            System.out.println("p");
                         }
 
                 }
