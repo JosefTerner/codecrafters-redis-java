@@ -51,8 +51,9 @@ public class Main {
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-                String line;
-                while ((line = in.readLine()) != null) {
+                String s = in.readLine();
+                System.out.println(s);
+                if (s.equals("ping")) {
 //                    System.out.println("+PONG/r/n");
                     out.println("+PONG\r\n");
                 }
