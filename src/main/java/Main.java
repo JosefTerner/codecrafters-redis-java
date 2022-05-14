@@ -53,19 +53,16 @@ public class Main {
                         if (s.contains("ping")) {
                             out.write("+PONG\r\n");
                         }
-
-                }
+                    }
+                    out.close();
+                    in.close();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    if (out != null) {
-                        out.close();
-                    }
-                    if (in != null) {
-                        in.close();
+
                         clientSocket.close();
-                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
