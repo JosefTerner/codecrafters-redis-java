@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Main {
@@ -44,6 +46,7 @@ public class Main {
         public void run() {
             BufferedWriter out;
             BufferedReader in;
+            Map<String, String> keyValue = new HashMap<>();
             try {
                 out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -55,16 +58,18 @@ public class Main {
                         out.flush();
                     }
                     if (s.contains("echo")) {
-                        System.out.println(in.readLine());
-                        String s2 = in.readLine();
-                        System.out.println(s2);
-                        out.write(":" + s2 + "\r\n");
+                        in.readLine();
+                        out.write(":" + in.readLine() + "\r\n");
                         out.flush();
                     }
                     if (s.contains("set")) {
-//                        System.out.println(in.readLine());
-
-                        System.out.println("SET HERE: " + s);
+                        System.out.println(in.readLine());
+                        String key = in.readLine();
+                        System.out.println(in.readLine());
+                        String value = in.readLine();
+                        keyValue.put(key, value);
+                        out.write("+OK" + "\r\n");
+                        out.flush();
                     }
                 }
                 out.close();
