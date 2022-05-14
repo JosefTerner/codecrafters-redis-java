@@ -12,16 +12,16 @@ public class Main {
             serverSocket = new ServerSocket(port);
             serverSocket.setReuseAddress(true);
             clientSocket = serverSocket.accept();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             while (clientSocket.isConnected()) {
-                String line = reader.readLine();
-                System.out.println(line);
+//                String line = reader.readLine();
+//                System.out.println(line);
 //                if (line.contains("ping")) {
                     writer.write("+PONG\r\n");
 //                }
             }
-            reader.close();
+//            reader.close();
             writer.close();
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
