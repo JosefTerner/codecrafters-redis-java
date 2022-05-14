@@ -20,7 +20,7 @@ public class Main {
                 ClientHandler clientSock
                         = new ClientHandler(clientSocket);
 
-                new Thread(clientSock).start();
+//                new Thread(clientSock).start();
             }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
