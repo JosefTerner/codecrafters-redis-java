@@ -16,12 +16,12 @@ public class Main {
             serverSocket = new ServerSocket(port);
             serverSocket.setReuseAddress(true);
             clientSocket = serverSocket.accept();
-//            while (true) {
+            while (clientSocket.isConnected()) {
                 ClientHandler clientSock
                         = new ClientHandler(clientSocket);
 
                 new Thread(clientSock).start();
-//            }
+            }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         } finally {
