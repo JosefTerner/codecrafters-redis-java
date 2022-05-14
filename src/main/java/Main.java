@@ -47,9 +47,10 @@ public class Main {
             PrintWriter out = null;
             BufferedReader in = null;
             try {
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 while (clientSocket.isConnected()) {
+
+                    out = new PrintWriter(clientSocket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String s;
                     while (Objects.nonNull(s = in.readLine())) {
                         System.out.println(s);
