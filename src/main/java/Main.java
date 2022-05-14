@@ -55,8 +55,7 @@ public class Main {
                         out.flush();
                     }
                     if (s.contains("echo")) {
-                        String s1 = in.readLine();
-                        System.out.println(s1);
+                        System.out.println(in.readLine());
                         String s2 = in.readLine();
                         System.out.println(s2);
                         out.write(s2);
