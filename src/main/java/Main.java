@@ -82,8 +82,10 @@ public class Main {
                                     @Override
                                     public void run() {
                                         try {
+                                            System.out.println("1" + System.currentTimeMillis());
                                             Thread.sleep(Long.parseLong(expTime));
                                             keyValue.remove(key);
+                                            System.out.println("2" + System.currentTimeMillis());
                                         } catch (InterruptedException e) {
                                             throw new RuntimeException(e);
                                         }
@@ -91,11 +93,13 @@ public class Main {
                                 };
                             }
                         }
-                            keyValue.put(key, value);
+                        System.out.println("3" + System.currentTimeMillis());
+                        keyValue.put(key, value);
                         out.write("+OK" + "\r\n");
                         out.flush();
                     }
                     if (s.contains("get")) {
+                        System.out.println("4" + System.currentTimeMillis());
                         in.readLine();
                         String key = in.readLine();
                         out.write(":" + keyValue.get(key) + "\r\n");
