@@ -46,7 +46,7 @@ public class Main {
         public void run() {
             PrintWriter out = null;
             BufferedReader in = null;
-            while (clientSocket.isConnected()) {
+//            while (clientSocket.isConnected()) {
                 try {
 
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -72,7 +72,7 @@ public class Main {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }                }
+            }
 
         }
     }
