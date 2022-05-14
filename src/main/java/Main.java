@@ -15,11 +15,12 @@ public class Main {
         try {
             serverSocket = new ServerSocket(port);
             serverSocket.setReuseAddress(true);
-            clientSocket = serverSocket.accept();
-            while (clientSocket.isConnected()) {
+            while (true) {
+                clientSocket = serverSocket.accept();
                 ClientHandler clientSock
                         = new ClientHandler(clientSocket);
-//                new Thread(clientSock).start();
+
+                new Thread(clientSock).start();
             }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
@@ -48,12 +49,13 @@ public class Main {
             try {
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-                String s;
-                while (Objects.nonNull(s = in.readLine())) {
-                    System.out.println(s);
-                    if (s.equals("ping")) {
-                        out.println("+PONG\r\n");
+                while (clientSocket.isConnected()) {
+                    String s;
+                    while (Objects.nonNull(s = in.readLine())) {
+                        System.out.println(s);
+                        if (s.equals("ping")) {
+                            out.println("+PONG\r\n");
+                        }
                     }
                 }
             } catch (IOException e) {
