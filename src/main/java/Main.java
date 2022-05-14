@@ -75,6 +75,7 @@ public class Main {
                             option = in.readLine();
                             System.out.println("option " + option);
                             if (option.equals("px")) {
+                                in.readLine();
                                 String expTime = in.readLine();
                                 System.out.println("exp time" + expTime);
                             }
