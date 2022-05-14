@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 
 public class Main {
 
@@ -46,17 +47,15 @@ public class Main {
             try {
                 out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//                while (Objects.nonNull(s = in.readLine())) {
-                while (clientSocket.isConnected()) {
-                    String s = in.readLine();
+//                while ()) {
+                String s;
+                while (clientSocket.isConnected() && Objects.nonNull(s = in.readLine())) {
                     System.out.println(s);
                     if (s.contains("ping")) {
                         out.write("+PONG" + "\r\n");
                         out.flush();
-//                        out.close();
                     }
                 }
-//                out.flush();
                 out.close();
                 in.close();
             } catch (IOException e) {
