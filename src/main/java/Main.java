@@ -17,9 +17,9 @@ public class Main {
             while (clientSocket.isConnected()) {
                 String line = reader.readLine();
                 System.out.println(line);
-                if (line.contains("ping")) {
+//                if (line.contains("ping")) {
                     writer.write("+PONG\r\n");
-                }
+//                }
             }
             reader.close();
             writer.close();
