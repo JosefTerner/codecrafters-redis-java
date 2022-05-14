@@ -19,7 +19,6 @@ public class Main {
             while (clientSocket.isConnected()) {
                 ClientHandler clientSock
                         = new ClientHandler(clientSocket);
-
 //                new Thread(clientSock).start();
             }
         } catch (IOException e) {
