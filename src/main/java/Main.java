@@ -71,6 +71,12 @@ public class Main {
                         out.write("+OK" + "\r\n");
                         out.flush();
                     }
+                    if (s.contains("get")) {
+                        System.out.println(in.readLine());
+                        String key = in.readLine();
+                        out.write(":" + keyValue.get(key) + "\r\n");
+                        out.flush();
+                    }
                 }
                 out.close();
                 in.close();
