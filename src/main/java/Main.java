@@ -63,21 +63,27 @@ public class Main {
                         out.flush();
                     }
                     if (s.contains("set")) {
-                        System.out.println(in.readLine());
+                        in.readLine();
                         String key = in.readLine();
-                        System.out.println(in.readLine());
+                        in.readLine();
                         String value = in.readLine();
-                        keyValue.put(key, value);
+                        String option;
+                        if (Objects.nonNull(option = in.readLine())) {
+                            if (option.equals("px")) {
+                                String expTime = in.readLine();
+                                System.out.println("exp time" + expTime);
+                            }
+                        }
+                            keyValue.put(key, value);
                         out.write("+OK" + "\r\n");
                         out.flush();
                     }
                     if (s.contains("get")) {
-                        System.out.println(in.readLine());
+                        in.readLine();
                         String key = in.readLine();
                         out.write(":" + keyValue.get(key) + "\r\n");
                         out.flush();
                     }
-
                 }
                 out.close();
                 in.close();
