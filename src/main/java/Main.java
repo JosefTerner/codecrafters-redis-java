@@ -57,6 +57,8 @@ public class Main {
                     if (s.contains("echo")) {
                         in.readLine();
                         out.write(in.readLine() + "\r\n");
+                        out.flush();
+
                     }
                 }
                 out.close();
