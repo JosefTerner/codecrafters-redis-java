@@ -26,10 +26,10 @@ public class Main {
                     if (s.contains("ping")) {
                         out.write("+PONG" + "\r\n");
                         out.flush();
-                        out.close();
+//                        out.close();
                     }
                 }
-                out.flush();
+//                out.flush();
                 out.close();
                 in.close();
             } catch (IOException e) {
