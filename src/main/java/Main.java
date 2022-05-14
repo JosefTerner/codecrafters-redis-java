@@ -51,7 +51,7 @@ public class Main {
                         String s = in.readLine();
                         System.out.println(s);
                         if (s.contains("ping")) {
-                            out.write("+PONG\r\n");
+                            out.write("+PONG" + "\r\n");
                         }
                     }
                     out.flush();
