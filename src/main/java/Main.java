@@ -54,6 +54,10 @@ public class Main {
                         out.write("+PONG" + "\r\n");
                         out.flush();
                     }
+                    if (s.contains("echo")) {
+                        in.readLine();
+                        out.write(in.readLine() + "\r\n");
+                    }
                 }
                 out.close();
                 in.close();
