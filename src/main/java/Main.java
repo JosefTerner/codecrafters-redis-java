@@ -35,14 +35,24 @@ public class Main {
     }
 
     private static class ClientHandler implements Runnable {
+
+        /** Client **/
         private final Socket clientSocket;
+
+        /**
+         * Writes text to the character output stream to the client
+         */
         private final BufferedWriter out;
+
+        /**
+         * Reads text from a character-input stream from the client
+          */
         private final BufferedReader in;
+
+        /**
+         * key-value storage for GET and SET commands
+         */
         private final Map<String, String> keyValue = new HashMap<>();
-        private static final String OK = "+OK\r\n";
-        private static final String NIL = "$-1\r\n";
-        private static final String PONG = "+PONG\r\n";
-        private static final String NEXT_LINE = "\r\n";
 
         public ClientHandler(Socket socket, OutputStream out, InputStream in) {
             this.clientSocket = socket;
@@ -56,16 +66,16 @@ public class Main {
                 while (clientSocket.isConnected() && Objects.nonNull(command = readLine())) {
                     switch (command) {
                         case Command.PING:
-                            write(PONG);
+                            write(Response.PONG);
                             break;
 
                         case Command.ECHO:
-                            write(":" + readLine(1) + NEXT_LINE);
+                            write(":" + readLine(1) + Response.CRLF);
                             break;
 
                         case Command.SET:
                             setCommand();
-                            write(OK);
+                            write(Response.OK);
                             break;
 
                         case Command.GET:
@@ -78,11 +88,14 @@ public class Main {
             }
         }
 
+        /**
+         * write value to {@link HashMap kayValue} with key
+         */
         private void setCommand() {
             String setKey = readLine(1);
             String setValue = readLine(1);
             if (hasNext()) {
-                if (readLine(1).equals("px")) {
+                if (readLine(1).equals(SetOptions.PX)) {
                     String expTime = readLine(1);
                     new Thread(() -> {
                         try {
@@ -97,19 +110,21 @@ public class Main {
             keyValue.put(setKey, setValue);
         }
 
+        /**
+         * @return value from {@link HashMap kayValue}
+         */
         private String getCommand() {
             String getKey = readLine(1);
             String getValue = keyValue.get(getKey);
             if (Objects.isNull(getValue)) {
-                return NIL;
+                return Response.NIL;
             } else {
-                return ":" + getValue + NEXT_LINE;
+                return ":" + getValue + Response.CRLF;
             }
         }
 
         /**
-         *
-         * @param str string to be written to {@link BufferedWriter}
+         * @param str string to be written to {@link BufferedWriter out}
          */
         private void write(String str) {
             try {
@@ -149,6 +164,9 @@ public class Main {
             return readLine();
         }
 
+        /**
+         * @return true - if {@link BufferedReader in} has more lines and false if not
+         */
         private boolean hasNext() {
             try {
                 return in.ready();
