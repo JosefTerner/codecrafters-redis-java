@@ -38,11 +38,11 @@ public class Main {
         private final Socket clientSocket;
         private final BufferedWriter out;
         private final BufferedReader in;
+        private final Map<String, String> keyValue = new HashMap<>();
         private static final String OK = "+OK\r\n";
         private static final String NIL = "$-1\r\n";
         private static final String PONG = "+PONG\r\n";
         private static final String NEXT_LINE = "\r\n";
-        private final Map<String, String> keyValue = new HashMap<>();
 
         public ClientHandler(Socket socket, OutputStream out, InputStream in) {
             this.clientSocket = socket;
@@ -51,7 +51,7 @@ public class Main {
         }
 
         public void run() {
-            try (in; out) {
+            try (BufferedReader in1 = in; BufferedWriter out1 = out) {
                 String command;
                 while (clientSocket.isConnected() && Objects.nonNull(command = readLine())) {
                     switch (command) {
@@ -109,7 +109,7 @@ public class Main {
 
         /**
          *
-         * @param str string to be written to {@link BufferedWriter} {@}
+         * @param str string to be written to {@link BufferedWriter}
          */
         private void write(String str) {
             try {
