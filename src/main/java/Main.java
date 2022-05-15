@@ -8,118 +8,89 @@ import java.util.Objects;
 public class Main {
 
     public static void main(String[] args) {
-        ServerSocket serverSocket;
-        Socket clientSocket = null;
         int port = 6379;
-        try {
-            serverSocket = new ServerSocket(port);
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             serverSocket.setReuseAddress(true);
             while (true) {
-                clientSocket = serverSocket.accept();
-
-                ClientHandler clientSock
-                        = new ClientHandler(clientSocket);
-
-                new Thread(clientSock).start();
+                try (Socket clientSocket = serverSocket.accept()) {
+                    ClientHandler clientSock = new ClientHandler(clientSocket);
+                    new Thread(clientSock).start();
+                } catch (IOException e) {
+                    System.out.println("clientSocket: " + e.getMessage());
+                }
             }
         } catch (IOException e) {
-            System.out.println("IOException: " + e.getMessage());
-        } finally {
-            try {
-                if (clientSocket != null) {
-                    clientSocket.close();
-                }
-            } catch (IOException e) {
-                System.out.println("IOException: " + e.getMessage());
-            }
+            System.out.println("serverSocket: " + e.getMessage());
         }
     }
 
     private static class ClientHandler implements Runnable {
         private final Socket clientSocket;
+        String OK = "+OK\r\n";
+        String NIL = "$-1\r\n";
+        String PONG = "+PONG\r\n";
+        String NEXT_LINE = "\r\n";
 
-        // Constructor
+
+
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
         }
 
         public void run() {
-            BufferedWriter out;
-            BufferedReader in;
             Map<String, String> keyValue = new HashMap<>();
-            try {
-                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                String s;
-                while (clientSocket.isConnected() && Objects.nonNull(s = in.readLine())) {
-                    System.out.println(s);
-                    if (s.contains("ping")) {
-                        out.write("+PONG" + "\r\n");
+            try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))){
+                String command;
+                while (clientSocket.isConnected() && Objects.nonNull(command = in.readLine())) {
+                    if (command.contains("ping")) {
+                        out.write(PONG);
                         out.flush();
                     }
-                    if (s.contains("echo")) {
+                    if (command.contains("echo")) {
                         in.readLine();
-                        out.write(":" + in.readLine() + "\r\n");
+                        out.write(":" + in.readLine() + NEXT_LINE);
                         out.flush();
                     }
-                    if (s.contains("set")) {
-                        System.out.println(in.readLine());
+                    if (command.contains("set")) {
+                        in.readLine();
                         String key = in.readLine();
-                        System.out.println(key);
-                        System.out.println(in.readLine());
+                        in.readLine();
                         String value = in.readLine();
-                        System.out.println("val" + value);
-                        String option;
                         if (in.ready()) {
                             in.readLine();
-                            option = in.readLine();
-                            System.out.println("option " + option);
-                            if (option.equals("px")) {
+                            if (in.readLine().equals("px")) {
                                 in.readLine();
                                 String expTime = in.readLine();
-                                System.out.println("exp time" + expTime);
                                 new Thread(() -> {
                                     try {
-                                        System.out.println("1" + System.currentTimeMillis());
                                         Thread.sleep(Long.parseLong(expTime));
                                         keyValue.remove(key);
-                                        System.out.println("2" + System.currentTimeMillis());
                                     } catch (InterruptedException e) {
                                         throw new RuntimeException(e);
                                     }
                                 }).start();
                             }
                         }
-                        System.out.println("3" + System.currentTimeMillis());
                         keyValue.put(key, value);
-                        out.write("+OK" + "\r\n");
+                        out.write(OK);
                         out.flush();
                     }
-                    if (s.contains("get")) {
-                        System.out.println("4" + System.currentTimeMillis());
+                    if (command.contains("get")) {
                         in.readLine();
                         String key = in.readLine();
                         String obj = keyValue.get(key);
                         if (Objects.isNull(obj)) {
-                            out.write("$" + "-1" + "\r\n");
+                            out.write(NIL);
                         } else {
-                            out.write(":" +  keyValue.get(key) + "\r\n");
+                            out.write(":" + keyValue.get(key) + NEXT_LINE);
                         }
                         out.flush();
                     }
                 }
-                out.close();
-                in.close();
             } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
+                System.out.println("ClientHandler: " + e.getMessage());
 
-                    clientSocket.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
