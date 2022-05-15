@@ -71,8 +71,6 @@ public class Main {
                         case Command.GET:
                             write(getCommand());
                             break;
-                        default:
-                            System.out.println("Unexpected command: " + command);
                     }
                 }
             } catch (IOException e) {
