@@ -14,7 +14,11 @@ public class Main {
             serverSocket.setReuseAddress(true);
             while (true) {
                 clientSocket = serverSocket.accept();
-                ClientHandler clientSock = new ClientHandler(clientSocket);
+                ClientHandler clientSock = new ClientHandler(
+                        clientSocket,
+                        clientSocket.getOutputStream(),
+                        clientSocket.getInputStream()
+                );
                 new Thread(clientSock).start();
             }
         } catch (IOException e) {
@@ -32,70 +36,124 @@ public class Main {
 
     private static class ClientHandler implements Runnable {
         private final Socket clientSocket;
-        String OK = "+OK\r\n";
-        String NIL = "$-1\r\n";
-        String PONG = "+PONG\r\n";
-        String NEXT_LINE = "\r\n";
+        private final BufferedWriter out;
+        private final BufferedReader in;
+        private static final String OK = "+OK\r\n";
+        private static final String NIL = "$-1\r\n";
+        private static final String PONG = "+PONG\r\n";
+        private static final String NEXT_LINE = "\r\n";
+        private final Map<String, String> keyValue = new HashMap<>();
 
-
-        public ClientHandler(Socket socket) {
+        public ClientHandler(Socket socket, OutputStream out, InputStream in) {
             this.clientSocket = socket;
+            this.out = new BufferedWriter(new OutputStreamWriter(out));
+            this.in = new BufferedReader(new InputStreamReader(in));
         }
 
         public void run() {
-            Map<String, String> keyValue = new HashMap<>();
-            try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+            try (in; out) {
                 String command;
-                while (clientSocket.isConnected() && Objects.nonNull(command = in.readLine())) {
-                    if (command.contains("ping")) {
-                        out.write(PONG);
-                        out.flush();
-                    }
-                    if (command.contains("echo")) {
-                        in.readLine();
-                        out.write(":" + in.readLine() + NEXT_LINE);
-                        out.flush();
-                    }
-                    if (command.contains("set")) {
-                        in.readLine();
-                        String key = in.readLine();
-                        in.readLine();
-                        String value = in.readLine();
-                        if (in.ready()) {
-                            in.readLine();
-                            if (in.readLine().equals("px")) {
-                                in.readLine();
-                                String expTime = in.readLine();
-                                new Thread(() -> {
-                                    try {
-                                        Thread.sleep(Long.parseLong(expTime));
-                                        keyValue.remove(key);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }).start();
-                            }
-                        }
-                        keyValue.put(key, value);
-                        out.write(OK);
-                        out.flush();
-                    }
-                    if (command.contains("get")) {
-                        in.readLine();
-                        String key = in.readLine();
-                        String obj = keyValue.get(key);
-                        if (Objects.isNull(obj)) {
-                            out.write(NIL);
-                        } else {
-                            out.write(":" + keyValue.get(key) + NEXT_LINE);
-                        }
-                        out.flush();
+                while (clientSocket.isConnected() && Objects.nonNull(command = readLine())) {
+                    switch (command) {
+                        case Command.PING:
+                            write(PONG);
+                            break;
+
+                        case Command.ECHO:
+                            write(":" + readLine(1) + NEXT_LINE);
+                            break;
+
+                        case Command.SET:
+                            setCommand();
+                            write(OK);
+                            break;
+
+                        case Command.GET:
+                            write(getCommand());
+                            break;
                     }
                 }
             } catch (IOException e) {
-                System.out.println("ClientHandler: " + e.getMessage());
+                System.out.println("closable: " + e.getMessage());
+            }
+        }
 
+        private void setCommand() {
+            String setKey = readLine(1);
+            String setValue = readLine(1);
+            if (hasNext()) {
+                if (readLine(1).equals("px")) {
+                    String expTime = readLine(1);
+                    new Thread(() -> {
+                        try {
+                            Thread.sleep(Long.parseLong(expTime));
+                            keyValue.remove(setKey);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).start();
+                }
+            }
+            keyValue.put(setKey, setValue);
+        }
+
+        private String getCommand() {
+            String getKey = readLine(1);
+            String getValue = keyValue.get(getKey);
+            if (Objects.isNull(getValue)) {
+                return NIL;
+            } else {
+                return ":" + getValue + NEXT_LINE;
+            }
+        }
+
+        /**
+         *
+         * @param str string to be written to {@link BufferedWriter} {@}
+         */
+        private void write(String str) {
+            try {
+                out.write(str);
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException("write: " + e.getMessage());
+            }
+        }
+
+        /**
+         * skips a line
+         */
+        private void skipLine() {
+            readLine();
+        }
+
+        /**
+         * @return line values
+         */
+        private String readLine() {
+            try {
+                return in.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException("readLine: " + e.getMessage());
+            }
+        }
+
+        /**
+         * @param skip the number of skipped lines before reading
+         * @return line values
+         */
+        private String readLine(int skip) {
+            for (int i = 0; i < skip; i++) {
+                skipLine();
+            }
+            return readLine();
+        }
+
+        private boolean hasNext() {
+            try {
+                return in.ready();
+            } catch (IOException e) {
+                throw new RuntimeException("readLine: " + e.getMessage());
             }
         }
     }
