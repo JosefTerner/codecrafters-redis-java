@@ -9,18 +9,24 @@ public class Main {
 
     public static void main(String[] args) {
         int port = 6379;
+        Socket clientSocket = null;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             serverSocket.setReuseAddress(true);
             while (true) {
-                try (Socket clientSocket = serverSocket.accept()) {
-                    ClientHandler clientSock = new ClientHandler(clientSocket);
-                    new Thread(clientSock).start();
+                clientSocket = serverSocket.accept();
+                ClientHandler clientSock = new ClientHandler(clientSocket);
+                new Thread(clientSock).start();
+            }
+        } catch (IOException e) {
+            System.out.println("serverSocket: " + e.getMessage());
+        } finally {
+            if (Objects.nonNull(clientSocket)) {
+                try {
+                    clientSocket.close();
                 } catch (IOException e) {
                     System.out.println("clientSocket: " + e.getMessage());
                 }
             }
-        } catch (IOException e) {
-            System.out.println("serverSocket: " + e.getMessage());
         }
     }
 
@@ -32,7 +38,6 @@ public class Main {
         String NEXT_LINE = "\r\n";
 
 
-
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
         }
@@ -40,7 +45,7 @@ public class Main {
         public void run() {
             Map<String, String> keyValue = new HashMap<>();
             try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))){
+                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
                 String command;
                 while (clientSocket.isConnected() && Objects.nonNull(command = in.readLine())) {
                     if (command.contains("ping")) {
