@@ -99,7 +99,12 @@ public class Main {
                         System.out.println("4" + System.currentTimeMillis());
                         in.readLine();
                         String key = in.readLine();
-                        out.write(":" + (Objects.isNull(keyValue.get(key)) ? "-1" : keyValue.get(key)) + "\r\n");
+                        String obj = keyValue.get(key);
+                        if (Objects.isNull(obj)) {
+                            out.write("$" + "-1" + "\r\n");
+                        } else {
+                            out.write(":" +  keyValue.get(key) + "\r\n");
+                        }
                         out.flush();
                     }
                 }
